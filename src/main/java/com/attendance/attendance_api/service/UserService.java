@@ -26,6 +26,7 @@ public class UserService {
                 .department(request.getDepartment())
                 .phone(request.getPhone())
                 .build();
+        user.prePersist();
         User saved = userRepository.save(user);
         return mapToResponse(saved);
     }
@@ -37,7 +38,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponse getUserById(Long id) {
+    public UserResponse getUserById(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return mapToResponse(user);
@@ -56,7 +57,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponse updateUser(Long id, UserRequest request) {
+    public UserResponse updateUser(String id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         user.setName(request.getName());
@@ -67,7 +68,7 @@ public class UserService {
         return mapToResponse(updated);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         userRepository.deleteById(id);

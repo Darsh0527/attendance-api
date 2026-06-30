@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AttendanceResponse {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String userName;
     private String status;
     private String remarks;

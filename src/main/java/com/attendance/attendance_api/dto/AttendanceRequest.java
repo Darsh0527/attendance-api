@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class AttendanceRequest {
 
     @NotNull(message = "User ID is required")
-    private Long userId;
+    private String userId;
 
     private String status;
 

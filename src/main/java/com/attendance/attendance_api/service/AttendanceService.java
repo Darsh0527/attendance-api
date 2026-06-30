@@ -22,11 +22,14 @@ public class AttendanceService {
     public AttendanceResponse markAttendance(AttendanceRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.getUserId()));
+
         Attendance attendance = Attendance.builder()
-                .user(user)
+                .userId(user.getId())
+                .userName(user.getName())
                 .status(request.getStatus() != null ? request.getStatus() : "PRESENT")
                 .remarks(request.getRemarks())
                 .build();
+        attendance.prePersist();
         Attendance saved = attendanceRepository.save(attendance);
         return mapToResponse(saved);
     }
@@ -38,13 +41,13 @@ public class AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    public AttendanceResponse getAttendanceById(Long id) {
+    public AttendanceResponse getAttendanceById(String id) {
         Attendance attendance = attendanceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Attendance not found with id: " + id));
         return mapToResponse(attendance);
     }
 
-    public List<AttendanceResponse> getAttendanceByUser(Long userId) {
+    public List<AttendanceResponse> getAttendanceByUser(String userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         return attendanceRepository.findByUserId(userId)
@@ -53,7 +56,7 @@ public class AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    public List<AttendanceResponse> getAttendanceByUserAndStatus(Long userId, String status) {
+    public List<AttendanceResponse> getAttendanceByUserAndStatus(String userId, String status) {
         return attendanceRepository.findByUserIdAndStatus(userId, status)
                 .stream()
                 .map(this::mapToResponse)
@@ -67,7 +70,7 @@ public class AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    public AttendanceResponse updateAttendance(Long id, AttendanceRequest request) {
+    public AttendanceResponse updateAttendance(String id, AttendanceRequest request) {
         Attendance attendance = attendanceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Attendance not found with id: " + id));
         attendance.setStatus(request.getStatus());
@@ -76,7 +79,7 @@ public class AttendanceService {
         return mapToResponse(updated);
     }
 
-    public void deleteAttendance(Long id) {
+    public void deleteAttendance(String id) {
         attendanceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Attendance not found with id: " + id));
         attendanceRepository.deleteById(id);
@@ -85,8 +88,8 @@ public class AttendanceService {
     private AttendanceResponse mapToResponse(Attendance attendance) {
         return AttendanceResponse.builder()
                 .id(attendance.getId())
-                .userId(attendance.getUser().getId())
-                .userName(attendance.getUser().getName())
+                .userId(attendance.getUserId())
+                .userName(attendance.getUserName())
                 .status(attendance.getStatus())
                 .remarks(attendance.getRemarks())
                 .checkInTime(attendance.getCheckInTime())

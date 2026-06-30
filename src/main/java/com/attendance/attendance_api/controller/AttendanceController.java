@@ -31,19 +31,19 @@ public class AttendanceController {
 
     // GET BY ID — index based
     @GetMapping("/{id}")
-    public ResponseEntity<AttendanceResponse> getAttendanceById(@PathVariable Long id) {
+    public ResponseEntity<AttendanceResponse> getAttendanceById(@PathVariable String id) {
         return ResponseEntity.ok(attendanceService.getAttendanceById(id));
     }
 
     // GET ALL ATTENDANCE FOR A USER — index based
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<AttendanceResponse>> getAttendanceByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<AttendanceResponse>> getAttendanceByUser(@PathVariable String userId) {
         return ResponseEntity.ok(attendanceService.getAttendanceByUser(userId));
     }
 
     // GET BY USER + STATUS — index based
     @GetMapping("/user/{userId}/status/{status}")
-    public ResponseEntity<List<AttendanceResponse>> getByUserAndStatus(@PathVariable Long userId,
+    public ResponseEntity<List<AttendanceResponse>> getByUserAndStatus(@PathVariable String userId,
                                                                        @PathVariable String status) {
         return ResponseEntity.ok(attendanceService.getAttendanceByUserAndStatus(userId, status));
     }
@@ -56,14 +56,14 @@ public class AttendanceController {
 
     // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<AttendanceResponse> updateAttendance(@PathVariable Long id,
+    public ResponseEntity<AttendanceResponse> updateAttendance(@PathVariable String id,
                                                                @Valid @RequestBody AttendanceRequest request) {
         return ResponseEntity.ok(attendanceService.updateAttendance(id, request));
     }
 
     // DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAttendance(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAttendance(@PathVariable String id) {
         attendanceService.deleteAttendance(id);
         return ResponseEntity.noContent().build();
     }

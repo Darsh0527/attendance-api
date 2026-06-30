@@ -1,16 +1,16 @@
 package com.attendance.attendance_api.repository;
 
 import com.attendance.attendance_api.entity.Attendance;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
+public interface AttendanceRepository extends MongoRepository<Attendance, String> {
 
-    List<Attendance> findByUserId(Long userId);
+    List<Attendance> findByUserId(String userId);
 
-    List<Attendance> findByUserIdAndStatus(Long userId, String status);
+    List<Attendance> findByUserIdAndStatus(String userId, String status);
 
     List<Attendance> findByStatus(String status);
 }

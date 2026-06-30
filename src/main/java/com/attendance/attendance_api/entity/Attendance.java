@@ -1,11 +1,11 @@
 package com.attendance.attendance_api.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "attendance")
+@Document(collection = "attendance")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,22 +13,18 @@ import java.time.LocalDateTime;
 public class Attendance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String userId;
 
-    @Column(nullable = false)
+    private String userName;
+
     private String status;
 
     private String remarks;
 
-    @Column(name = "check_in_time")
     private LocalDateTime checkInTime;
 
-    @PrePersist
     public void prePersist() {
         this.checkInTime = LocalDateTime.now();
         if (this.status == null) this.status = "PRESENT";
